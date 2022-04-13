@@ -27,7 +27,7 @@
                                 <td>{{$post->title}}</td>
                                 <td>{{substr($post->content, 0, 30)}}</td>
                                 <td>{{$post->slug}}</td>
-                                <td>{{$post->category->name}}</td>
+                                <td>{{isset($post->category)?$post->category->name : 'N.D.'}}</td>
                                 <td class="d-flex">
                                   <a href="{{route('admin.posts.show', ['post' => $post->id])}}" class="btn btn-primary">Vedi</a>
                                   <a href="{{route('admin.posts.edit', ['post' => $post->id])}}" class="ml-3 btn btn-secondary">Modifica</a>

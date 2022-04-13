@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -31,7 +32,9 @@ class PostController extends Controller
 
         $categories = Category::all();
 
-        return view('admin.post.create', compact('categories'));
+        $tags = Tag::all();
+
+        return view('admin.post.create', compact('categories'), compact('tags'));
     }
 
     /**
@@ -48,6 +51,7 @@ class PostController extends Controller
                 'content' => 'required|min:10',
                 'category_id' => 'nullable|exists:categories,id',  //<- previene un inserimento errato
                 //nella select
+                'tags' => 'nullable|exists:tags,id',
             ]
             );
 
@@ -62,7 +66,7 @@ class PostController extends Controller
 
         $counter = 1;
 
-        while(Post::where('slug', $slug)->first()) {
+        while(Post::where('slug', '=', $slug)->first()) {
 
             //Utilizzo un contatore per evitare omonimia sui titoli, se il titolo è uguale
             //allora verrà messo un numero identificato dal contatore
@@ -77,6 +81,10 @@ class PostController extends Controller
         $post = new Post();
         $post->fill($data);
         $post->save();
+
+        $post->tags()->sync($data['tags']); //sync metodo di relazione per aggiungere o eliminare
+        //tags array che viene popolato dall'input nell'html di create.blade.php
+
 
         return redirect()->route('admin.posts.index');
     }
@@ -102,9 +110,10 @@ class PostController extends Controller
     {
 
         $categories = Category::all();
+        $tags = Tag::all();
 
 
-        return view('admin.post.edit', compact('post', 'categories'));
+        return view('admin.post.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -120,7 +129,8 @@ class PostController extends Controller
             [
                 'title' => 'required|min:5',
                 'content' => 'required|min:10',
-                'category_id' => 'nullable|exists:categories,id'
+                'category_id' => 'nullable|exists:categories,id',
+                'tags' => 'nullable|exists:tags,id',
             ]
             );
 
@@ -136,7 +146,7 @@ class PostController extends Controller
 
             $counter = 1;
 
-        while(Post::where('slug', $slug)->first()) {
+        while(Post::where('slug', '=', $slug)->first()) {
 
             //Utilizzo un contatore per evitare omonimia sui titoli, se il titolo è uguale
             //allora verrà messo un numero identificato dal contatore
@@ -154,6 +164,7 @@ class PostController extends Controller
 
         $post->update($data);
         $post->save();
+        $post->tags()->sync($data['tags']);
 
         return redirect()->route('admin.posts.index');
     }

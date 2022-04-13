@@ -35,7 +35,24 @@
                     <label for="content">Contenuto del form</label>
                     <textarea class="form-control" id="content" rows="10" name="content" value="">{{old('content', $post->content)}}</textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">Salva</button>
+
+                  @foreach ($tags as $tag)
+
+                  @if ($errors->any())
+                            <div class="custom-control custom-checkbox">
+                                <input name="tags[]" type="checkbox" class="custom-control-input" id="tag_{{$tag->id}}" value={{$tag->id}} {{in_array($tag->id, old('tags'))?'checked':''}}>
+                                <label class="custom-control-label" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+                            </div>
+                   @else
+                            <div class="custom-control custom-checkbox">
+                                <input name="tags[]" type="checkbox" class="custom-control-input" id="tag_{{$tag->id}}" value={{$tag->id}} {{$post->tags->contains($tag->id)?'checked':''}}  >
+                                <label class="custom-control-label" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+                            </div>
+                   @endif
+                    
+                  @endforeach
+
+                  <button type="submit" class="btn btn-primary mt-4">Salva</button>
           </form>          
         </div>
     </div>

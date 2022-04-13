@@ -10,8 +10,6 @@
 
                   @csrf
 
-
-
                   <div class="form-group">
                     <label for="category_id">Categorie</label>
                     <select class="form-control" id="category_id" name="category_id">
@@ -37,7 +35,21 @@
                     <label for="content">Contenuto del form</label>
                     <textarea class="form-control" id="content" rows="10" name="content" value="">{{old('content')}}</textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">Salva</button>
+
+
+
+                  @foreach ($tags as $tag)
+
+                  <div class="custom-control custom-checkbox">
+                    <input name="tags[]" type="checkbox" class="custom-control-input" id="tag_{{$tag->name}}" value="{{$tag->id}}" {{in_array($tag->id, old('tags', []))?'checked':''}}>
+                    <label class="custom-control-label" for="tag_{{$tag->name}}">{{$tag->name}}</label>
+                  </div>
+                    
+                  @endforeach
+
+                  
+
+                  <button type="submit" class="btn btn-primary mt-4">Salva</button>
           </form>          
         </div>
     </div>

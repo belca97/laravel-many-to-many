@@ -10,7 +10,15 @@
           <div><strong>Titolo:</strong> {{$post->title}}</div>
           <div><strong>Contenuto:</strong> {!! $post->content !!}</div>
           <div><strong>Slug:</strong> {{$post->slug}}</div>
-          <div><strong>Categoria:</strong> {{$post->category->name}}</div>
+          {{-- <div><strong>Categoria:</strong> {{$post->category->name}}</div> --}}
+          
+
+          <div>
+             @foreach ($post->tags as $tag )
+             <span class="badge badge-info">{{$tag->name}}</span>
+             @endforeach
+          </div>
+
 
           <a href="{{route('admin.posts.index')}}" class="btn btn-primary mt-4">Torna all'elenco dei post</a>
 
